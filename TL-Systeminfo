@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Script to gather system information
+# Author: Tariq Lewis (Replace with your name)
+
+# Output file
+data_file="system_info.txt"
+
+# Start of script
+{
+    echo "System Information Script"
+    echo "Generated on: $(date)"
+    echo "===================================="
+
+    # Hostname
+    echo "System Hostname: $(hostname)"
+
+    # Operating System
+    echo "Operating System: $(lsb_release -d | awk -F":" '{print $2}' | sed 's/^ *//')"
+
+    # Uptime
+    echo "System Uptime: $(uptime -p)"
+
+    # Kernel Version
+    echo "Linux Kernel Version: $(uname -r)"
+
+    # CPU Information
+    echo "CPU Information:"
+    lscpu | grep -E '^Model name|^CPU\(s\)' | sed 's/^/    /'
+
+    # Memory Information
+    echo "Memory Information:"
+    free -h | awk '/Mem:/ {print "    Total: "$2"\n    Used: "$3"\n    Free: "$4}'
+
+    # Network Information
+    echo "Network Interfaces Information:"
+    ip -br addr show | awk '{printf "    Interface: %-10s IP: %-15s MAC: %s\n", $1, $3, $4}'
+
+    # Filesystem Usage
+    echo "Filesystem Utilization:"
+    df -hT | awk 'NR==1 || /^\/dev/ {printf "    %-20s %-10s %-10s %-10s %-10s %-10s\n", $1, $2, $3, $4, $5, $6}'
+
+    # Last 5 Errors in Logs
+    echo "Last 5 Log Errors (case-insensitive):"
+    sudo grep -i "error" /var/log/syslog | tail -5 | sed 's/^/    /'
+
+} > "$data_file"
+
+# Confirm script execution
+echo "System information has been saved to $data_file"
