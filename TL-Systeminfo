@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Script to gather system information
-# Author: Tariq Lewis (Replace with your name)
+# Author: Tariq Lewis 
 
 # Output file
 data_file="system_info.txt"
@@ -41,7 +41,7 @@ data_file="system_info.txt"
     df -hT | awk 'NR==1 || /^\/dev/ {printf "    %-20s %-10s %-10s %-10s %-10s %-10s\n", $1, $2, $3, $4, $5, $6}'
 
     # Last 5 Errors in Logs
-    echo "Last 5 Log Errors (case-insensitive):"
+    echo "Last 5 Log Errors:"
     sudo grep -i "error" /var/log/syslog | tail -5 | sed 's/^/    /'
 
 } > "$data_file"
